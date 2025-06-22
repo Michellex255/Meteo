@@ -91,7 +91,7 @@ main {
   margin-left: -60px;
 }
 
-.weather-forecast-container {
+#forecast {
   display: flex;
   justify-content: space-between;
   margin-top: 30px;
