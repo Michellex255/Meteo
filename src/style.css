@@ -129,3 +129,80 @@ footer {
   font-size: 14px;
   color: rgba(0, 0, 0, 0.6);
 }
+
+#icon.rainy,
+.weather-forecast-day.rainy {
+  position: relative;
+  overflow: visible;
+}
+#icon.rainy::before,
+#icon.rainy::after,
+.weather-forecast-day.rainy::before,
+.weather-forecast-day.rainy::after {
+  content: "";
+  position: absolute;
+  width: 2px;
+  height: 12px;
+  background: transparent;
+  top: 70px;
+  left: 40px;
+  animation: none;
+}
+#icon.rainy::before {
+  left: 30%;
+}
+#icon.rainy::after {
+  left: 65%;
+}
+
+@keyframes drop {
+  0% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  80% {
+    transform: translateY(20px);
+    opacity: 0.8;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+#icon.cloudy .weather-app-icon {
+  animation: drift 4s ease-in-out infinite;
+}
+
+@keyframes drift {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(10px);
+  }
+}
+
+#icon.sunny img {
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.08);
+  }
+}
+
+.weather-forecast-day.cloudy img,
+.weather-forecast-day.cloudy > .weather-forecast-icon {
+  animation: drift 4s ease-in-out infinite;
+}
+
+.weather-forecast-day.sunny img,
+.weather-forecast-day.sunny > .weather-forecast-icon {
+  animation: pulse 2s ease-in-out infinite;
+}

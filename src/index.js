@@ -1,13 +1,14 @@
 function refreshWeather(response) {
   let temperatureElement = document.querySelector("#temperature");
-  let temperature = response.data.temperature.current;
   let cityElement = document.querySelector("#city");
   let descriptionElement = document.querySelector("#description");
   let humidityElement = document.querySelector("#humidity");
   let windSpeedElement = document.querySelector("#wind-speed");
   let timeElement = document.querySelector("#time");
-  let date = new Date(response.data.time * 1000);
   let iconElement = document.querySelector("#icon");
+
+  let temperature = response.data.temperature.current;
+  let date = new Date(response.data.time * 1000);
 
   cityElement.innerHTML = response.data.city;
   timeElement.innerHTML = formatDate(date);
@@ -15,7 +16,24 @@ function refreshWeather(response) {
   humidityElement.innerHTML = `${response.data.temperature.humidity}%`;
   windSpeedElement.innerHTML = `${response.data.wind.speed}km/h`;
   temperatureElement.innerHTML = Math.round(temperature);
-  iconElement.innerHTML = `<img src="${response.data.condition.icon_url}" class="weather-app-icon"/>`;
+
+  iconElement.innerHTML = `
+      <img
+      src="${response.data.condition.icon_url}"
+      class="weather-app-icon"
+      alt="${response.data.condition.description}"
+    />
+  `;
+
+  iconElement.className = "";
+  const desc = response.data.condition.description.toLowerCase();
+  if (desc.includes("rain")) {
+    iconElement.classList.add("rainy");
+  } else if (desc.includes("cloud")) {
+    iconElement.classList.add("cloudy");
+  } else if (desc.includes("clear") || desc.includes("sun")) {
+    iconElement.classList.add("sunny");
+  }
 
   getForecast(response.data.city);
 }
@@ -32,7 +50,6 @@ function formatDate(date) {
     "Friday",
     "Saturday",
   ];
-
   let day = days[date.getDay()];
 
   return `${day} ${hours}:${minutes < 10 ? "0" + minutes : minutes}`;
@@ -71,11 +88,23 @@ function displayForecast(response) {
 
   response.data.daily.forEach(function (day, index) {
     if (index < 5) {
+      let desc = day.condition.description.toLowerCase();
+      let weatherClass = "";
+      if (desc.includes("rain")) {
+        weatherClass = "rainy";
+      } else if (desc.includes("cloud")) {
+        weatherClass = "cloudy";
+      } else if (desc.includes("clear") || desc.includes("sun")) {
+        weatherClass = "sunny";
+      }
+
       forecastHtml += ` 
-    <div class="weather-forecast-day">
+    <div class="weather-forecast-day ${weatherClass}">
     <div class="weather-forecast-date">${formatDay(day.time)}</div>
 
-    <img src="${day.condition.icon_url}" class="weather-forecast-icon" />
+    <img src="${day.condition.icon_url}" class="weather-forecast-icon"  alt="${
+        day.condition.description
+      }"/>
     <div class="weather-forecast-temperatures">
     <div class="weather-forecast-temperature">
    <strong>${Math.round(day.temperature.maximum)}°</strong>
